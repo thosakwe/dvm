@@ -72,6 +72,7 @@ Stream<Progress> download(Uri uri, String path) async* {
   final sink = file.openWrite();
   final client = new HttpClient();
   final response = await client.getUrl(uri).then((r) => r.close());
+  if (response.statusCode >= 400) throw new StateError('$uri responded with status code ${response.statusCode}');
   yield new Progress._(file, response.contentLength, 0);
   var current = 0;
   await for (final bytes in response) {
